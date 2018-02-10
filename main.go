@@ -11,7 +11,7 @@ import (
 func generateAllLinks() []string {
 	//strings that are used in the URL for iding each server region
 	//Asia, North America, Korea/Japan, Kakao(seems to be a korean ISP, not sure why it is its own server), South America, Europe, Oceania, South East Asia
-	serverStrings := []string{"as"} //, "na", "krjp", "kakao", "sa", "eu", "oc", "sea"}
+	serverStrings := []string{"as", "na"} //, "krjp", "kakao", "sa", "eu", "oc", "sea"}
 	startString := "https://pubg.op.gg/leaderboard/?server="
 	returnStrings := []string{}
 
@@ -83,7 +83,7 @@ func main() {
 	for _, link := range links {
 		scoreStore := collectData(link)
 		for _, score := range scoreStore {
-			fmt.Printf("%v\n", score)
+			fmt.Printf("%v %v\n", score, link)
 		}
 	}
 }
