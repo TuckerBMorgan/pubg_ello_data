@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-
+	"os"
+	"time"
 	"golang.org/x/net/html"
 )
 
@@ -76,14 +77,31 @@ func scraper(n *html.Node) []string {
 
 	return scoreStore
 }
-
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
 func main() {
 	//create all the links for all of the different leaderboard regions, and the for single and duo queue
 	links := generateAllLinks()
+	servers := []string{"as", "na"}
+	count := 0
+	mod := 2
+	f, err := os.OpenFile("../../../pubg_project_site/data_file.txt", os.O_APPEND | os.O_WRONLY, os.ModeAppend)
+	f.WriteString(fmt.Sprintf("%v\n", time.Now()))
+	check(err)
 	for _, link := range links {
+		innerCount := 1
 		scoreStore := collectData(link)
 		for _, score := range scoreStore {
-			fmt.Printf("%v %v\n", score, link)
+			dumb := []byte(fmt.Sprintf("%v %v %v %v\n", score, servers[count / mod], (count + 1) - (2 * (count / mod)), innerCount))
+			_, err := f.Write(dumb);
+			check(err)
+	//		fmt.Printf("%v\n", n2)
+			innerCount++
 		}
+		count++
 	}
+	defer f.Close()
 }
